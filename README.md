@@ -2,14 +2,14 @@
 A simple boilerplate starter template for your pine script coding.
 
 ## Features
-Safety - Max Drawdown
-Safety - Max Contracts
-Safety - Max Loss No. Days
-Restrictions - Backtest Range
-Restrictions - Hours Range (No Nights)
-Restrictions - Anti-News Trading
-Trades - Take Profit/Stop Loss
-Trades - Only Buy/Sell
+* Safety - Max Drawdown
+* Safety - Max Contracts
+* Safety - Max Loss No. Days
+* Restrictions - Backtest Range
+* Restrictions - Hours Range (No Nights)
+* Restrictions - Anti-News Trading
+* Trades - Take Profit/Stop Loss
+* Trades - Only Buy/Sell
 
 
 ## Instructions
@@ -17,7 +17,7 @@ Trades - Only Buy/Sell
 
 2. Review the first 10 lines and edit the `strategy` options and `strategy.risk` safety features as this will **override** any custom coding you do and GUI options set.
 
-3. Anything between the EDIT ⇣ EDIT ⇡ tags is for your custom code, sample code displayed there.
+3. Anything between the EDIT tags is for your custom code, sample code displayed there.
 
 ```
 ///////////////////////////////////////////////
@@ -37,6 +37,7 @@ Trades - Only Buy/Sell
 
 4. Take note of the `// === USER FINAL LOGIC ===` within the EDIT section. When variables `sys_logic_buy` and `sys_logic_sell` are true, trades will be triggered. 
 
+5. That should be it, happy trading!
 
 ## Disclaimer
 The Pine Script code provided in this repository is for educational and informational purposes only. It is not intended as financial or investment advice and should not be construed as such. Trading and investing in financial markets involve risk, and past performance is not indicative of future results.
