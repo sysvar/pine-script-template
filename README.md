@@ -52,3 +52,6 @@ Trading and investing involve substantial risk, and you should carefully conside
 By using or adapting the code in this repository, you agree to release the author from any and all liability associated with the use of the code. The author is not responsible for any direct, indirect, or consequential damages resulting from the use of the code.
 
 Use this code at your own risk, and only after thorough testing in a simulated environment. Always practice responsible risk management and make informed decisions based on your own research and judgment.
+
+## Author
+[https://github.com/sysvar/pine-script-template]
