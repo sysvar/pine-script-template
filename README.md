@@ -40,6 +40,28 @@ A simple boilerplate starter template for your pine script coding.
 
 5. That should be it, happy trading!
 
+## Variable Guide
+Please continue the use of these variable formatting prefixes to keep your code organised.
+
+### Prefixes (Level 1)
+ - **sys_** = Template Variables
+ - **usr_** = Your Custom User Variables
+
+### Prefixes (Level 2)
+ - \*\*\*_**input**\_ = For Editable GUI Inputs
+ - \*\*\*_**funct**\_ = For Indicators/Functions
+ - \*\*\*_**logic**\_ = For Math/Calulations
+ - \*\*\*_**track**\_ = For Tracking Conditions
+
+### Prefixes (Level 3)
+ - \*\*\*_\*\*\*\*\*\_**backtest**\_ = Category Example 1
+ - \*\*\*_\*\*\*\*\*\_**time**\_ = Category Example 2
+
+### Prefixes (Level 4)
+ - \*\*\*_\*\*\*\*\*\_backtest\_**start** = Category Item Example 1
+ - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
+
+
 ## Disclaimer
 The Pine Script code provided in this repository is for educational and informational purposes only. It is not intended as financial or investment advice and should not be construed as such. Trading and investing in financial markets involve risk, and past performance is not indicative of future results.
 
