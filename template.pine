@@ -1,0 +1,132 @@
+//@version=5
+strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=true, pyramiding=0, initial_capital=40000, default_qty_type=strategy.fixed, default_qty_value=500000, currency=currency.USD, commission_type=strategy.commission.cash_per_contract, commission_value=0.000006)
+
+
+// === SAFETY FEATURES ===
+//strategy.risk.max_drawdown(value=1000, type=strategy.cash)
+//strategy.risk.max_position_size(contracts=500000)
+//strategy.risk.max_cons_loss_days(count=5)
+
+
+// === CORE GUI INPUTS ===
+sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions")
+sys_input_backtest_start = input.time(timestamp("14 Nov 2023 08:00 +0000"), "Start Date - UTC 0", group="Backtest Range Restrictions")
+sys_input_backtest_end = input.time(timestamp("14 Nov 2023 18:00 +0000"), "End Date - UTC 0", group="Backtest Range Restrictions")
+
+sys_input_time_hours = input.session("1000-1800", "Allowed hours", group="Trading Time Range Restrictions")
+sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions")
+
+sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Exit Strategy... (Select Only 1)")
+sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Exit Strategy... (Select Only 1)")
+
+sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trending Preference")
+sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trending Preference")
+
+sys_input_risk_pipsTakeProfit = input.float(6, step = 1, title="Take Profit Pips", group="Risk Management")
+sys_input_risk_pipsStopLoss = input.float(4, step = 1, title="Stop Loss Pips", group="Risk Management")
+
+sys_input_cand_newsPips = input(7, title="News Pip Trigger", group="Risk Management")
+sys_input_cand_newsCandles = input(10, title="News Con. After Candles", group="Risk Management")
+
+
+// === CORE VARIABLES ===
+sys_track_posi_opened = strategy.position_size < 0 or strategy.position_size > 0
+sys_track_posi_bought = strategy.position_size > 0
+sys_track_posi_sold = strategy.position_size < 0
+
+var sys_track_cond_preCheck = false
+var sys_track_cond_buy = false
+var sys_track_cond_sell = false
+
+
+// === CORE FUNCT/LOGIC ===
+sys_logic_backtest = sys_input_backtest_range == false or (sys_input_backtest_range == true and (time >= sys_input_backtest_start and time <= sys_input_backtest_end))
+
+sys_logic_time = time(timeframe.period, sys_input_time_hours + ":" + sys_input_time_days, timezone = "Europe/London")
+
+sys_logic_cand_newsdecimal = sys_input_cand_newsPips / 10000  // Important conversion
+
+sys_funct_candle_news = array.new_float(0)
+for i = 0 to sys_input_cand_newsCandles - 1
+    array.push(sys_funct_candle_news, i == 0 ? high - low : high[i] - low[i])
+
+sys_logic_candle_news = not (array.max(sys_funct_candle_news) > sys_logic_cand_newsdecimal)
+
+
+// === CORE DECISIONS ===
+sys_track_cond_preCheck := sys_track_posi_opened == false ? true : sys_track_cond_preCheck
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// === USER STRATEGIES - (FUNCTIONS & LOGIC) ===
+
+
+// 1 // EMA   ////////////////////////////////////////////////////////////////////////////
+
+// Variables
+var usr_logic_ema = false
+
+// Input
+usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+
+// Function
+usr_funct_ema = ta.ema(close, usr_input_ema_length)
+
+// Logic
+usr_logic_ema_diff = close - usr_funct_ema
+usr_logic_ema_buy = usr_logic_ema_diff > 3
+usr_logic_ema_sell = usr_logic_ema_diff < 3
+
+// Plot
+plot(usr_funct_ema, color=color.yellow, title="EMA")
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+// === USER FINAL LOGIC ===
+sys_logic_buy = usr_logic_ema_buy
+sys_logic_sell = usr_logic_ema_sell
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// === POSITION CONDITIONS ===
+
+if sys_logic_buy == true
+    //log.info("sys_logic_buy: {0}", sys_logic_buy)
+    sys_track_cond_buy := true
+
+if sys_logic_sell == true
+    //log.info("sys_logic_sell: {0}", sys_logic_sell)
+    sys_track_cond_sell := true
+
+
+// === POSITION EXECUTION ===
+
+if sys_track_cond_buy and sys_track_cond_preCheck and sys_logic_time and sys_logic_backtest and sys_input_dire_buy and sys_logic_candle_news
+    //log.info("\nsys_track_cond_preCheckBuy: {0}\npsys_logic_buy: {1}\nusr_logic_candle_rangeBuy: {2}\nusr_funct_candle_direction0: {3}", sys_track_cond_preCheckBuy, sys_logic_buy, usr_logic_candle_rangeBuy, usr_funct_candle_direction0)
+    strategy.entry("TPSL Buy Entry", strategy.long)
+    strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
+    sys_track_cond_buy := false                                             // Important De-Duplication 9000 Orders Max
+    sys_track_cond_preCheck := false                                        // Imporant Restrict Buy and Sell Same Time
+
+if sys_track_cond_sell and sys_track_cond_preCheck and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news
+    //log.info("\nsys_track_cond_preCheckSell: {0}\nsys_logic_sell: {1}\nusr_logic_candle_rangeSell: {2}\nusr_funct_candle_direction0: {3}", sys_track_cond_preCheckSell, sys_logic_sell, usr_logic_candle_rangeSell, usr_funct_candle_direction0)
+    strategy.entry("TPSL Sell Entry", strategy.short)
+    strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
+    sys_track_cond_sell := false                                            // Important De-Duplication 9000 Orders Max
+    sys_track_cond_preCheck := false                                        // Imporant Restrict Buy and Sell Same Time
+
