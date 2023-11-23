@@ -119,14 +119,14 @@ if sys_logic_sell == true
 // === POSITION EXECUTION ===
 
 if sys_track_cond_buy and sys_track_cond_preCheck and sys_logic_time and sys_logic_backtest and sys_input_dire_buy and sys_logic_candle_news
-    //log.info("\nsys_track_cond_preCheckBuy: {0}\npsys_logic_buy: {1}\nusr_logic_candle_rangeBuy: {2}\nusr_funct_candle_direction0: {3}", sys_track_cond_preCheckBuy, sys_logic_buy, usr_logic_candle_rangeBuy, usr_funct_candle_direction0)
+    //log.info("sys_track_cond_buy: {0}\n sys_logic_backtest: {1}\n sys_input_dire_buy: {2}\n sys_logic_candle_news: {3}\n sys_track_cond_preCheck: {4}", sys_track_cond_buy, sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_track_cond_preCheck)
     strategy.entry("TPSL Buy Entry", strategy.long)
     strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
     sys_track_cond_buy := false                                             // Important De-Duplication 9000 Orders Max
     sys_track_cond_preCheck := false                                        // Imporant Restrict Buy and Sell Same Time
 
 if sys_track_cond_sell and sys_track_cond_preCheck and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news
-    //log.info("\nsys_track_cond_preCheckSell: {0}\nsys_logic_sell: {1}\nusr_logic_candle_rangeSell: {2}\nusr_funct_candle_direction0: {3}", sys_track_cond_preCheckSell, sys_logic_sell, usr_logic_candle_rangeSell, usr_funct_candle_direction0)
+    //log.info("sys_track_cond_sell: {0}\n sys_logic_backtest: {1}\n sys_input_dire_sell: {2}\n sys_logic_candle_news: {3}\n sys_track_cond_preCheck: {4}", sys_track_cond_sell, sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_track_cond_preCheck)
     strategy.entry("TPSL Sell Entry", strategy.short)
     strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
     sys_track_cond_sell := false                                            // Important De-Duplication 9000 Orders Max
