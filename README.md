@@ -1,4 +1,4 @@
-# Pine Script v5 Template
+# Trading View Pine Script v5 Boilerplate Template
 A simple boilerplate starter template for your pine script coding.
 
 ## Features
