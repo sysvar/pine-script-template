@@ -10,6 +10,7 @@ A simple boilerplate starter template for your pine script coding.
 * Restrictions - Anti-News Trading
 * Trades - Take Profit/Stop Loss
 * Trades - Only Buy/Sell
+* Trading - Take Profit / Stop Loss
 
 
 ## Instructions
