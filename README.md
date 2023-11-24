@@ -51,7 +51,6 @@ Please continue the use of these variable formatting prefixes to keep your code 
  - \*\*\*_**input**\_ = For Editable GUI Inputs
  - \*\*\*_**funct**\_ = For Indicators/Functions
  - \*\*\*_**logic**\_ = For Math/Calulations
- - \*\*\*_**track**\_ = For Tracking Conditions
 
 ### Prefixes (Level 3)
  - \*\*\*_\*\*\*\*\*\_**backtest**\_ = Category Example 1
