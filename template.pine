@@ -10,6 +10,11 @@ strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=tru
 //strategy.risk.max_cons_loss_days(count=5)
 
 
+// === CORE VARIABLES ===
+var sys_logic_buy = false
+var sys_logic_sell = false
+
+
 // === CORE GUI INPUTS ===
 sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions")
 sys_input_backtest_start = input.time(timestamp("14 Nov 2023 08:00 +0000"), "Start Date - UTC 0", group="Backtest Range Restrictions")
@@ -31,16 +36,6 @@ sys_input_cand_newsPips = input(7, title="News Pip Trigger", group="Risk Managem
 sys_input_cand_newsCandles = input(10, title="News Con. After Candles", group="Risk Management")
 
 
-// === CORE VARIABLES ===
-sys_track_posi_opened = strategy.position_size < 0 or strategy.position_size > 0
-sys_track_posi_bought = strategy.position_size > 0
-sys_track_posi_sold = strategy.position_size < 0
-
-var sys_track_cond_preCheck = false
-var sys_track_cond_buy = false
-var sys_track_cond_sell = false
-
-
 // === CORE FUNCT/LOGIC ===
 sys_logic_backtest = sys_input_backtest_range == false or (sys_input_backtest_range == true and (time >= sys_input_backtest_start and time <= sys_input_backtest_end))
 
@@ -54,9 +49,8 @@ for i = 0 to sys_input_cand_newsCandles - 1
 
 sys_logic_candle_news = not (array.max(sys_funct_candle_news) > sys_logic_cand_newsdecimal)
 
+sys_logic_position = not (strategy.position_size < 0 or strategy.position_size > 0)
 
-// === CORE DECISIONS ===
-sys_track_cond_preCheck := sys_track_posi_opened == false ? true : sys_track_cond_preCheck
 
 
 
@@ -68,7 +62,6 @@ sys_track_cond_preCheck := sys_track_posi_opened == false ? true : sys_track_con
 
 
 // === USER STRATEGIES - (FUNCTIONS & LOGIC) ===
-
 
 // 1 // EMA   ////////////////////////////////////////////////////////////////////////////
 
@@ -94,8 +87,16 @@ plot(usr_funct_ema, color=color.yellow, title="EMA")
 
 
 // === USER FINAL LOGIC ===
-sys_logic_buy = usr_logic_ema_buy
-sys_logic_sell = usr_logic_ema_sell
+if usr_logic_ema_buy == true
+    sys_logic_buy := true
+    //log.info("sys_logic_buy: {0}", sys_logic_buy)
+
+if usr_logic_ema_sell == true
+    sys_logic_sell := true
+    //log.info("sys_logic_sell: {0}", sys_logic_sell)
+
+// Remember to reset these variables at the end of the script
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,30 +106,37 @@ sys_logic_sell = usr_logic_ema_sell
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// === POSITION CONDITIONS ===
-
-if sys_logic_buy == true
-    //log.info("sys_logic_buy: {0}", sys_logic_buy)
-    sys_track_cond_buy := true
-
-if sys_logic_sell == true
-    //log.info("sys_logic_sell: {0}", sys_logic_sell)
-    sys_track_cond_sell := true
-
 
 // === POSITION EXECUTION ===
 
-if sys_track_cond_buy and sys_track_cond_preCheck and sys_logic_time and sys_logic_backtest and sys_input_dire_buy and sys_logic_candle_news
-    //log.info("sys_track_cond_buy: {0}\n sys_logic_backtest: {1}\n sys_input_dire_buy: {2}\n sys_logic_candle_news: {3}\n sys_track_cond_preCheck: {4}", sys_track_cond_buy, sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_track_cond_preCheck)
+if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_input_dire_buy and sys_logic_candle_news and sys_logic_position
+    //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_logic_position)
     strategy.entry("TPSL Buy Entry", strategy.long)
     strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
-    sys_track_cond_buy := false                                             // Important De-Duplication 9000 Orders Max
-    sys_track_cond_preCheck := false                                        // Imporant Restrict Buy and Sell Same Time
 
-if sys_track_cond_sell and sys_track_cond_preCheck and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news
-    //log.info("sys_track_cond_sell: {0}\n sys_logic_backtest: {1}\n sys_input_dire_sell: {2}\n sys_logic_candle_news: {3}\n sys_track_cond_preCheck: {4}", sys_track_cond_sell, sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_track_cond_preCheck)
+
+if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news and sys_logic_position
+    //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_logic_position)
     strategy.entry("TPSL Sell Entry", strategy.short)
     strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
-    sys_track_cond_sell := false                                            // Important De-Duplication 9000 Orders Max
-    sys_track_cond_preCheck := false                                        // Imporant Restrict Buy and Sell Same Time
+
+
+
+// === RESET VARIABLES ===
+
+sys_logic_position := false
+sys_logic_buy := false
+sys_logic_sell := false
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+usr_logic_ema_buy := false
+usr_logic_ema_sell := false
 
