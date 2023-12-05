@@ -11,7 +11,8 @@ A simple boilerplate starter template for your pine script coding.
 * Trades - Take Profit/Stop Loss
 * Trades - Only Buy/Sell
 * Trading - Take Profit / Stop Loss
-* Highlighting - Outside backtest times 
+* Highlight - Outside backtest times
+* Highlight - Outside trading times
 
 
 ## Instructions
