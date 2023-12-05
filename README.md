@@ -8,9 +8,9 @@ A simple boilerplate starter template for your pine script coding.
 * Restrictions - Backtest Range
 * Restrictions - Hours Range (No Nights)
 * Restrictions - Anti-News Trading
-* Trades - Take Profit/Stop Loss
-* Trades - Only Buy/Sell
-* Trading - Take Profit / Stop Loss
+* Trades - Take Profit / Stop Loss
+* Trades - Only Buy/Sell Option
+* Trades - Reverse Buy/Sell Entry
 * Highlight - Outside backtest times
 * Highlight - Outside trading times
 
