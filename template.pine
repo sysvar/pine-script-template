@@ -23,12 +23,12 @@ sys_input_backtest_end = input.time(timestamp("14 Nov 2023 18:00 +0000"), "End D
 sys_input_time_hours = input.session("1000-1800", "Allowed hours", group="Trading Time Range Restrictions")
 sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions")
 
-sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Preference - Entry")
-sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Preference - Entry")
-sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Preference - Entry")
+sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry")
+sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Entry")
+sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Entry")
 
-sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Trading Preference - Exit (Select Only 1)")
-sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Trading Preference - Exit (Select Only 1)")
+sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
+sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
 
 sys_input_risk_pipsTakeProfit = input.float(6, step = 1, title="Take Profit Pips", group="Risk Management")
 sys_input_risk_pipsStopLoss = input.float(4, step = 1, title="Stop Loss Pips", group="Risk Management")
