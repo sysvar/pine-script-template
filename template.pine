@@ -27,8 +27,8 @@ sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry")
 sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Entry")
 sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Entry")
 
-sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
-sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
+sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Trading Exit (Select 1)")
+sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select 1)")
 
 sys_input_risk_pipsTakeProfit = input.float(6, step = 1, title="Take Profit Pips", group="Risk Management")
 sys_input_risk_pipsStopLoss = input.float(4, step = 1, title="Stop Loss Pips", group="Risk Management")
@@ -72,10 +72,12 @@ bgcolor(sys_logic_trading_outRange ? color.new(color.red, 90) : na, title="Non-T
 // 1 // EMA   ////////////////////////////////////////////////////////////////////////////
 
 // Variables
+var usr_group_name="User Strategy -----------------------------------------------------------------------------------"
 var usr_logic_ema = false
 
 // Input
-usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+//usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group=usr_group_name)
 
 // Function
 usr_funct_ema = ta.ema(close, usr_input_ema_length)
