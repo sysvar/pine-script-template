@@ -25,6 +25,7 @@ sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time
 
 sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Preference - Entry")
 sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Preference - Entry")
+sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Preference - Entry")
 
 sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Trading Preference - Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Trading Preference - Exit (Select Only 1)")
@@ -89,12 +90,19 @@ plot(usr_funct_ema, color=color.yellow, title="EMA")
 // === USER FINAL LOGIC ===
 
 if usr_logic_ema_buy == true
-    sys_logic_buy := true
-    //log.info("sys_logic_buy: {0}", sys_logic_buy)
+    if sys_input_dire_reverse
+        sys_logic_sell := true
+    else
+        sys_logic_buy := true   
 
 if usr_logic_ema_sell == true
-    sys_logic_sell := true
-    //log.info("sys_logic_sell: {0}", sys_logic_sell)
+    if sys_input_dire_reverse
+        sys_logic_buy := true
+    else
+        sys_logic_sell := true
+
+//log.info("sys_logic_buy: {0}", sys_logic_buy)
+//log.info("sys_logic_sell: {0}", sys_logic_sell)
 
 // Remember to reset these variables at the end of the script
 
