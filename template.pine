@@ -53,6 +53,10 @@ sys_logic_candle_news = not (array.max(sys_funct_candle_news) > sys_logic_cand_n
 sys_logic_position = not (strategy.position_size < 0 or strategy.position_size > 0)
 
 
+// === CORE SHADING ===
+sys_logic_backtest_outRange = sys_input_backtest_range and (time < sys_input_backtest_start or time > sys_input_backtest_end)
+bgcolor(sys_logic_backtest_outRange ? color.new(color.red, 90) : na, title="Backtest Range", transp=0, offset=0)
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
