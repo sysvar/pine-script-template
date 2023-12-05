@@ -17,10 +17,10 @@ var sys_logic_sell = false
 
 // === CORE GUI INPUTS ===
 sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions")
-sys_input_backtest_start = input.time(timestamp("14 Nov 2023 10:00 +0000"), "Start Date - UTC 0", group="Backtest Range Restrictions")
-sys_input_backtest_end = input.time(timestamp("14 Nov 2023 18:00 +0000"), "End Date - UTC 0", group="Backtest Range Restrictions")
+sys_input_backtest_start = input.time(timestamp("14 Nov 2023 07:00 +0000"), "Start Date - UTC 0", group="Backtest Range Restrictions")
+sys_input_backtest_end = input.time(timestamp("14 Nov 2023 19:00 +0000"), "End Date - UTC 0", group="Backtest Range Restrictions")
 
-sys_input_time_hours = input.session("1000-1800", "Allowed hours", group="Trading Time Range Restrictions")
+sys_input_time_hours = input.session("0700-1900", "Allowed hours", group="Trading Time Range Restrictions")
 sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions")
 
 sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry")
