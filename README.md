@@ -47,7 +47,7 @@ Please continue the use of these variable formatting prefixes to keep your code 
 
 ### Prefixes (Level 1)
  - **sys_** = Template Variables
- - **usr_** = Your Custom User Variables
+ - **usr_** = User Variables (Your Custom)
 
 ### Prefixes (Level 2)
  - \*\*\*_**input**\_ = For Editable GUI Inputs
