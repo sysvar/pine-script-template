@@ -31,8 +31,8 @@ sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Tra
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
 sys_input_exit_rhlr = input.bool(false, "(C) Recent High/Low and Risk Reward Ratio (TODO)", group="Trading Exit (Select Only 1)")
 
-sys_input_risk_pipsTakeProfit = input.float(9, step = 1, title="(A) Take Profit Pips", group="Risk Management")
-sys_input_risk_pipsStopLoss = input.float(4, step = 1, title="(A) Stop Loss Pips", group="Risk Management")
+sys_input_risk_tpslProfit = input.float(9, step = 1, title="(A) Take Profit Pips", group="Risk Management")
+sys_input_risk_tpslLoss = input.float(4, step = 1, title="(A) Stop Loss Pips", group="Risk Management")
 sys_input_risk_hlrrLookBack = input.int(20, step = 1, title="(C) Lookback Period High/Low", group="Risk Management")
 sys_input_risk_hlrrExtraPips = input.float(0.5, step = 0.1, title="(C) Extra Pips Above/Below", group="Risk Management")
 sys_input_risk_hlrrRiskReward = input.float(1.5, step = 0.1, title="(C) Risk Reward Ratio", group="Risk Management")
@@ -56,9 +56,10 @@ sys_logic_position = not (strategy.position_size < 0 or strategy.position_size >
 sys_logic_backtest_outRange = sys_input_backtest_range and (time < sys_input_backtest_start or time > sys_input_backtest_end)
 sys_logic_trading_outRange  = not sys_logic_time
 
-sys_logic_cand_highest = ((ta.highest(high, sys_input_risk_hlrrLookBack) + (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000
-sys_logic_cand_lowest = (((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000) * -1
-
+sys_logic_hlrr_sellEntry = ((ta.highest(high, sys_input_risk_hlrrLookBack) + (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000
+sys_logic_hlrr_buyEntry = (((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000) * -1
+sys_logic_hlrr_sellExit = sys_logic_hlrr_sellEntry * sys_input_risk_hlrrRiskReward
+sys_logic_hlrr_buyExit = sys_logic_hlrr_buyEntry * sys_input_risk_hlrrRiskReward
 
 // === CORE SHADING ===
 bgcolor(sys_logic_backtest_outRange ? color.new(color.red, 90) : na, title="Backtest Range")
@@ -135,22 +136,24 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_input_dire_bu
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
         strategy.entry("TPSL Buy Entry", strategy.long)
-        strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
+        strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_input_risk_tpslLoss * 10, profit=sys_input_risk_tpslProfit * 10)
     if sys_input_exit_tpts
         log.info("Buy - Take Profit Trailing Stop NOT IMPLEMENTED YET")
     if sys_input_exit_hlrr
-        log.info("Buy - High/Low Risk Reward NOT IMPLEMENTED YET")
+        strategy.entry("HLRR Buy Entry", strategy.long)
+        strategy.exit("HLRR Buy Exit", from_entry ="HLRR Buy Entry", loss=sys_logic_hlrr_buyEntry, profit=sys_logic_hlrr_buyExit)
 
 
 if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
         strategy.entry("TPSL Sell Entry", strategy.short)
-        strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_input_risk_pipsStopLoss * 10, profit=sys_input_risk_pipsTakeProfit * 10)
+        strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_input_risk_tpslLoss * 10, profit=sys_input_risk_tpslProfit * 10)
     if sys_input_exit_tpts
         log.info("Sell - Take Profit Trailing Stop NOT IMPLEMENTED YET")
     if sys_input_exit_hlrr
-        log.info("Sell - High/Low Risk Reward NOT IMPLEMENTED YET")
+        strategy.entry("HLRR Sell Entry", strategy.short)
+        strategy.exit("HLRR Sell Exit", from_entry ="HLRR Sell Entry", loss=sys_logic_hlrr_sellEntry, profit=sys_logic_hlrr_sellExit)
 
 
 
