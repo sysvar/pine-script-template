@@ -56,6 +56,9 @@ sys_logic_position = not (strategy.position_size < 0 or strategy.position_size >
 sys_logic_backtest_outRange = sys_input_backtest_range and (time < sys_input_backtest_start or time > sys_input_backtest_end)
 sys_logic_trading_outRange  = not sys_logic_time
 
+sys_logic_tpsl_profit = sys_input_risk_tpslProfit * 10
+sys_logic_tpsl_loss = sys_input_risk_tpslLoss * 10
+
 sys_logic_hlrr_sellEntry = ((ta.highest(high, sys_input_risk_hlrrLookBack) + (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000
 sys_logic_hlrr_buyEntry = (((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000) * -1
 sys_logic_hlrr_sellExit = sys_logic_hlrr_sellEntry * sys_input_risk_hlrrRiskReward
@@ -136,7 +139,7 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_input_dire_bu
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
         strategy.entry("TPSL Buy Entry", strategy.long)
-        strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_input_risk_tpslLoss * 10, profit=sys_input_risk_tpslProfit * 10)
+        strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_logic_tpsl_loss, profit=sys_logic_tpsl_profit)
     if sys_input_exit_tpts
         log.info("Buy - Take Profit Trailing Stop NOT IMPLEMENTED YET")
     if sys_input_exit_hlrr
@@ -148,7 +151,7 @@ if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_input_dire_s
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
         strategy.entry("TPSL Sell Entry", strategy.short)
-        strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_input_risk_tpslLoss * 10, profit=sys_input_risk_tpslProfit * 10)
+        strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_logic_tpsl_loss, profit=sys_logic_tpsl_profit)
     if sys_input_exit_tpts
         log.info("Sell - Take Profit Trailing Stop NOT IMPLEMENTED YET")
     if sys_input_exit_hlrr
