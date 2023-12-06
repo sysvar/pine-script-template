@@ -63,8 +63,9 @@ Please continue the use of these variable formatting prefixes to keep your code 
  - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
 
 ## Todo
-* Highlighting - Outside trading times 
 * Allowing Timezone editing for all times
+* Trailing Stop Loss
+* Recent high/low Stop Loss and risk ratio for Take Profit
 
 ## Disclaimer
 The Pine Script code provided in this repository is for educational and informational purposes only. It is not intended as financial or investment advice and should not be construed as such. Trading and investing in financial markets involve risk, and past performance is not indicative of future results.
