@@ -13,6 +13,8 @@ strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=tru
 // === CORE VARIABLES ===
 var sys_logic_buy = false
 var sys_logic_sell = false
+var usr_logic_buy = false
+var usr_logic_sell = false
 
 
 // === CORE GUI INPUTS ===
@@ -64,7 +66,8 @@ sys_logic_hlrr_buyEntry = (((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_
 sys_logic_hlrr_sellExit = sys_logic_hlrr_sellEntry * sys_input_risk_hlrrRiskReward
 sys_logic_hlrr_buyExit = sys_logic_hlrr_buyEntry * sys_input_risk_hlrrRiskReward
 
-// === CORE SHADING ===
+
+// === CORE GRAPH SHADING ===
 bgcolor(sys_logic_backtest_outRange ? color.new(color.red, 90) : na, title="Backtest Range")
 bgcolor(sys_logic_trading_outRange ? color.new(color.red, 90) : na, title="Non-Trading Range")
 
@@ -77,9 +80,7 @@ bgcolor(sys_logic_trading_outRange ? color.new(color.red, 90) : na, title="Non-T
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// === USER STRATEGIES - (FUNCTIONS & LOGIC) ===
-
-// 1 // EMA   ////////////////////////////////////////////////////////////////////////////
+// === USER STRATEGY ===
 
 // Variables
 var usr_group_name="User Strategy -----------------------------------------------------------------------------------"
@@ -100,29 +101,14 @@ usr_logic_ema_sell = usr_logic_ema_diff < 3
 // Plot
 plot(usr_funct_ema, color=color.yellow, title="EMA")
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
-// === USER FINAL LOGIC ===
-
+// Decision
 if usr_logic_ema_buy == true
-    if sys_input_dire_reverse
-        sys_logic_sell := true
-    else
-        sys_logic_buy := true   
+    usr_logic_buy := true
 
 if usr_logic_ema_sell == true
-    if sys_input_dire_reverse
-        sys_logic_buy := true
-    else
-        sys_logic_sell := true
+    usr_logic_sell := true
 
-//log.info("sys_logic_buy: {0}", sys_logic_buy)
-//log.info("sys_logic_sell: {0}", sys_logic_sell)
-
-// Remember to reset these variables at the end of the script
-
+// Remember to RESET THESE VARIABLES at the END of the SCRIPT !
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,6 +116,24 @@ if usr_logic_ema_sell == true
 //    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
 //                                                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// === FINAL LOGIC ===
+
+//log.info("sys_logic_buy: {0}", sys_logic_buy)
+if usr_logic_buy == true
+    if sys_input_dire_reverse
+        sys_logic_sell := true
+    else
+        sys_logic_buy := true
+
+//log.info("sys_logic_sell: {0}", sys_logic_sell)
+if usr_logic_sell == true
+    if sys_input_dire_reverse
+        sys_logic_buy := true
+    else
+        sys_logic_sell := true
 
 
 
@@ -165,7 +169,8 @@ if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_input_dire_s
 sys_logic_position := false
 sys_logic_buy := false
 sys_logic_sell := false
-
+usr_logic_buy := false
+usr_logic_sell := false
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
