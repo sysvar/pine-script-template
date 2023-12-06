@@ -27,14 +27,18 @@ sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry")
 sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Entry")
 sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Entry")
 
-sys_input_exit_tpsl = input.bool(true, "Take Profit / Stop Loss", group="Trading Exit (Select 1)")
-sys_input_exit_tpts = input.bool(false, "Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select 1)")
+sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
+sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
+sys_input_exit_rhlr = input.bool(false, "(C) Recent High/Low and Risk Reward Ratio (TODO)", group="Trading Exit (Select Only 1)")
 
-sys_input_risk_pipsTakeProfit = input.float(6, step = 1, title="Take Profit Pips", group="Risk Management")
-sys_input_risk_pipsStopLoss = input.float(4, step = 1, title="Stop Loss Pips", group="Risk Management")
+sys_input_risk_pipsTakeProfit = input.float(9, step = 1, title="(A) Take Profit Pips", group="Risk Management")
+sys_input_risk_pipsStopLoss = input.float(4, step = 1, title="(A) Stop Loss Pips", group="Risk Management")
 
-sys_input_cand_newsPips = input(7, title="News Pip Trigger", group="Risk Management")
-sys_input_cand_newsCandles = input(10, title="News Con. After Candles", group="Risk Management")
+sys_input_risk_lookBack = input.int(20, step = 1, title="(C) Lookback Period High/Low", group="Risk Management")
+sys_input_risk_riskReward = input.float(1.5, step = 0.1, title="(C) Risk Reward Ratio", group="Risk Management")
+
+sys_input_cand_newsPips = input.int(7, title="News Pip Trigger", group="Risk Management")
+sys_input_cand_newsCandles = input.int(10, title="News Con. After Candles", group="Risk Management")
 
 
 // === CORE FUNCT/LOGIC ===
