@@ -29,7 +29,7 @@ sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trad
 
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
-sys_input_exit_rhlr = input.bool(false, "(C) Recent High/Low and Risk Reward Ratio (TODO)", group="Trading Exit (Select Only 1)")
+sys_input_exit_hlrr = input.bool(false, "(C) Recent High/Low and Risk Reward Ratio", group="Trading Exit (Select Only 1)")
 
 sys_input_risk_tpslProfit = input.float(9, step = 1, title="(A) Take Profit Pips", group="Risk Management")
 sys_input_risk_tpslLoss = input.float(4, step = 1, title="(A) Stop Loss Pips", group="Risk Management")
