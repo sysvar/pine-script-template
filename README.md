@@ -8,9 +8,10 @@ A simple boilerplate starter template for your pine script coding.
 * Restrictions - Backtest Range
 * Restrictions - Hours Range (No Nights)
 * Restrictions - Anti-News Trading
-* Trades - Take Profit / Stop Loss
-* Trades - Only Buy/Sell Option
-* Trades - Reverse Buy/Sell Entry
+* Trading - Take Profit / Stop Loss
+* Trading - Recent High/Low with Risk Reward Ratio
+* Trades - Only Buy or Sell Option
+* Trades - Reverse Buy & Sell Entry
 * Highlight - Outside backtest times
 * Highlight - Outside trading times
 
@@ -65,7 +66,7 @@ Please continue the use of these variable formatting prefixes to keep your code 
 ## Todo
 * Allowing Timezone editing for all times
 * Trailing Stop Loss
-* Recent high/low Stop Loss and risk ratio for Take Profit
+* Webhook Alerts
 
 ## Disclaimer
 The Pine Script code provided in this repository is for educational and informational purposes only. It is not intended as financial or investment advice and should not be construed as such. Trading and investing in financial markets involve risk, and past performance is not indicative of future results.
