@@ -121,14 +121,14 @@ if usr_logic_ema_sell == true
 
 // === FINAL LOGIC ===
 
-//log.info("sys_logic_buy: {0}", sys_logic_buy)
+//log.info("usr_logic_buy: {0}", usr_logic_buy)
 if usr_logic_buy == true
     if sys_input_dire_reverse
         sys_logic_sell := true
     else
         sys_logic_buy := true
 
-//log.info("sys_logic_sell: {0}", sys_logic_sell)
+//log.info("usr_logic_sell: {0}", usr_logic_sell)
 if usr_logic_sell == true
     if sys_input_dire_reverse
         sys_logic_buy := true
