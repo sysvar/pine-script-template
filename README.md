@@ -65,6 +65,7 @@ Please continue the use of these variable formatting prefixes to keep your code 
 
 ## Todo
 * Allowing Timezone editing for all times
+* Consolidation and Trending Market Trade Switches
 * Trailing Stop Loss
 * Webhook Alerts
 
