@@ -26,7 +26,7 @@ A simple boilerplate starter template for your pine script coding.
 ```
 ///////////////////////////////////////////////
 //                                           //
-//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣     //
 //                                           //
 ///////////////////////////////////////////////
 
@@ -34,7 +34,7 @@ A simple boilerplate starter template for your pine script coding.
 
 ///////////////////////////////////////////////
 //                                           //
-//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   //
+//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡     //
 //                                           //
 ///////////////////////////////////////////////
 ```
