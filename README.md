@@ -39,7 +39,7 @@ A simple boilerplate starter template for your pine script coding.
 ///////////////////////////////////////////////
 ```
 
-4. Take note of the `// === USER FINAL LOGIC ===` within the EDIT section. When variables `sys_logic_buy` and `sys_logic_sell` are true, trades will be triggered. 
+4. Take note of the variables `usr_logic_buy` and `usr_logic_sell` within the EDIT section. When true, trades will be triggered. 
 
 5. That should be it, happy trading!
 
