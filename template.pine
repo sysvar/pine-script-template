@@ -18,16 +18,16 @@ var usr_logic_sell = false
 
 
 // === CORE GUI INPUTS ===
-sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions")
-sys_input_backtest_start = input.time(timestamp("14 Nov 2023 07:00 +0000"), "Start Date - UTC 0", group="Backtest Range Restrictions")
-sys_input_backtest_end = input.time(timestamp("14 Nov 2023 19:00 +0000"), "End Date - UTC 0", group="Backtest Range Restrictions")
+sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions", tooltip = "Not for live trading")
+sys_input_backtest_start = input.time(timestamp("14 Nov 2023 07:00 +0000"), "Start Date", group="Backtest Range Restrictions", tooltip = "UTC 0 Timezone Fixed")
+sys_input_backtest_end = input.time(timestamp("14 Nov 2023 19:00 +0000"), "End Date", group="Backtest Range Restrictions", tooltip = "UTC 0 Timezone Fixed")
 
 sys_input_time_hours = input.session("0700-1900", "Allowed hours", group="Trading Time Range Restrictions")
-sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions")
+sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions", tooltip = "1 = Sunday, 7 = Saturday")
 
-sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry")
-sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Entry")
-sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Entry")
+sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry", tooltip = "Only Buy")
+sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Entry", tooltip = "Only Sell")
+sys_input_dire_reverse = input.bool(true, title='Reverse Buy/Sell', group="Trading Entry", tooltip = "When entering trade, reverse entry")
 
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
