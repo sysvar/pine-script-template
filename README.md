@@ -73,6 +73,49 @@ Please continue the use of these variable formatting prefixes to keep your code 
  - \*\*\*_\*\*\*\*\*\_backtest\_**start** = Category Item Example 1
  - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
 
+## Example
+A simple working example of some custom code in an organised fashion, also included in example script.
+
+```
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// === USER STRATEGY ===
+
+// Variables
+//  - none yet
+
+// Input
+usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+
+// Function
+usr_funct_ema = ta.ema(close, usr_input_ema_length)
+
+// Logic
+usr_logic_ema_diff = close - usr_funct_ema
+usr_logic_ema_buy = usr_logic_ema_diff > 3
+usr_logic_ema_sell = usr_logic_ema_diff < 3
+
+// Plot
+plot(usr_funct_ema, color=color.yellow, title="EMA")
+
+// Decision
+if usr_logic_ema_buy == true
+    usr_logic_buy := true
+
+if usr_logic_ema_sell == true
+    usr_logic_sell := true
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+```
+
 ## Todo
 * Allowing Timezone editing for all times
 * Consolidation and Trending Market Trade Switches
