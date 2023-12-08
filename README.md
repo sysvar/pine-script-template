@@ -79,7 +79,7 @@ A simple working example of some custom code in an organised fashion, also inclu
 ```
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                                    //
-//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
+//      EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT      //
 //                                                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -111,7 +111,7 @@ if usr_logic_ema_sell == true
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                                    //
-//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
+//      EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT      //
 //                                                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ```
