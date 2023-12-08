@@ -1,19 +1,19 @@
 # TradingView PineScript v5 Boilerplate Template
-A simple boilerplate starter template for your pine script coding.
+A **simple** boilerplate starter template for your pine script coding.
 
 ## Features
-* Safety - Max Drawdown
-* Safety - Max Contracts
-* Safety - Max Loss No. Days
-* Restrictions - Backtest Range
-* Restrictions - Hours Range (No Nights)
-* Restrictions - Anti-News Trading
-* Trading - Take Profit / Stop Loss
-* Trading - Recent High/Low with Risk Reward Ratio
-* Trades - Only Buy or Sell Option
-* Trades - Reverse Buy & Sell Entry
-* Highlight - Outside backtest times
-* Highlight - Outside trading times
+* **Safety** - Max Drawdown
+* **Safety** - Max Contracts
+* **Safety** - Max Loss No. Days
+* **Restrictions** - Backtest Range
+* **Restrictions** - Hours Range (No Nights)
+* **Restrictions** - Anti-News Trading
+* **Trading** - Take Profit / Stop Loss
+* **Trading** - Recent High/Low with Risk Reward Ratio
+* **Trades** - Only Buy or Sell Option
+* **Trades** - Reverse Buy & Sell Entry
+* **Highlight** - Outside backtest times
+* **Highlight** - Outside trading times
 
 
 ## Instructions
@@ -39,9 +39,19 @@ A simple boilerplate starter template for your pine script coding.
 ///////////////////////////////////////////////
 ```
 
-4. Take note of the variables `usr_logic_buy` and `usr_logic_sell` within the EDIT section. When true, trades will be triggered. 
+4. Take note of the variables `usr_logic_buy` and `usr_logic_sell` within the EDIT section. When true, trades will be triggered in that respective direction.
 
-5. That should be it, happy trading!
+```
+if usr_logic_ema_buy == true
+    usr_logic_buy := true
+
+if usr_logic_ema_sell == true
+    usr_logic_sell := true
+```
+
+5. Reset your variables at the very bottom of the script. 
+
+6. Happy trading!
 
 ## Variable Guide
 Please continue the use of these variable formatting prefixes to keep your code organised.
