@@ -22,6 +22,7 @@ sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="
 sys_input_backtest_start = input.time(timestamp("14 Nov 2023 07:00 +0000"), "Start Date", group="Backtest Range Restrictions", tooltip = "UTC 0 Timezone Fixed")
 sys_input_backtest_end = input.time(timestamp("14 Nov 2023 19:00 +0000"), "End Date", group="Backtest Range Restrictions", tooltip = "UTC 0 Timezone Fixed")
 
+sys_input_time_zone = input.string('UTC', title='Timezone', options = ["UTC-12", "UTC-11", "UTC-10", "UTC-9", "UTC-8", "UTC-7", "UTC-6", "UTC-5", "UTC-4", "UTC-3", "UTC-2", "UTC-1", "UTC", "UTC+0", "UTC+1", "UTC+2", "UTC+3", "UTC+4", "UTC+5", "UTC+6", "UTC+7", "UTC+8", "UTC+9", "UTC+10", "UTC+11", "UTC+12"], group='Trading Time Range Restrictions')
 sys_input_time_hours = input.session("0700-1900", "Allowed hours", group="Trading Time Range Restrictions")
 sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions", tooltip = "1 = Sunday, 7 = Saturday")
 
@@ -45,7 +46,7 @@ sys_input_cand_newsCandles = input.int(10, title="News Con. After Candles", grou
 // === CORE FUNCT/LOGIC ===
 sys_logic_backtest = sys_input_backtest_range == false or (sys_input_backtest_range == true and (time >= sys_input_backtest_start and time <= sys_input_backtest_end))
 
-sys_logic_time = time(timeframe.period, sys_input_time_hours + ":" + sys_input_time_days, timezone = "Europe/London")
+sys_logic_time = time(timeframe.period, sys_input_time_hours + ":" + sys_input_time_days, sys_input_time_zone)
 
 sys_logic_cand_newsdecimal = sys_input_cand_newsPips / 10000  // Important conversion
 sys_funct_candle_news = array.new_float(0)
