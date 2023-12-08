@@ -117,7 +117,6 @@ Please continue the use of these variable formatting prefixes to keep your code 
  - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
 
 ## Todo
-* Allowing Timezone editing for all times
 * Consolidation and Trending Market Trade Switches
 * Add additional simple examples to readme
 * Trailing Stop Loss
