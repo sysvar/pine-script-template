@@ -53,26 +53,6 @@ if usr_logic_ema_sell == true
 
 6. Happy trading!
 
-## Variable Guide
-Please continue the use of these variable formatting prefixes to keep your code organised.
-
-### Prefixes (Level 1)
- - **sys_** = Template Variables
- - **usr_** = User Variables (Your Custom)
-
-### Prefixes (Level 2)
- - \*\*\*_**input**\_ = For Editable GUI Inputs
- - \*\*\*_**funct**\_ = For Indicators/Functions
- - \*\*\*_**logic**\_ = For Math/Calulations
-
-### Prefixes (Level 3)
- - \*\*\*_\*\*\*\*\*\_**backtest**\_ = Category Example 1
- - \*\*\*_\*\*\*\*\*\_**time**\_ = Category Example 2
-
-### Prefixes (Level 4)
- - \*\*\*_\*\*\*\*\*\_backtest\_**start** = Category Item Example 1
- - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
-
 ## Example
 A simple working example of some custom code in an organised fashion, also included in example script.
 
@@ -116,9 +96,30 @@ if usr_logic_ema_sell == true
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ```
 
+## Variable Guide
+Please continue the use of these variable formatting prefixes to keep your code organised.
+
+### Prefixes (Level 1)
+ - **sys_** = Template Variables
+ - **usr_** = User Variables (Your Custom)
+
+### Prefixes (Level 2)
+ - \*\*\*_**input**\_ = For Editable GUI Inputs
+ - \*\*\*_**funct**\_ = For Indicators/Functions
+ - \*\*\*_**logic**\_ = For Math/Calulations
+
+### Prefixes (Level 3)
+ - \*\*\*_\*\*\*\*\*\_**backtest**\_ = Category Example 1
+ - \*\*\*_\*\*\*\*\*\_**time**\_ = Category Example 2
+
+### Prefixes (Level 4)
+ - \*\*\*_\*\*\*\*\*\_backtest\_**start** = Category Item Example 1
+ - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
+
 ## Todo
 * Allowing Timezone editing for all times
 * Consolidation and Trending Market Trade Switches
+* Add additional simple examples to readme
 * Trailing Stop Loss
 * Webhook Alerts
 
