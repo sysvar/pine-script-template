@@ -2,9 +2,11 @@
 A **simple** boilerplate starter template for your pine script coding.
 
 ## Features
-* **Safety** - Max Drawdown
-* **Safety** - Max Contracts
+* **Safety** - Max Drawdown Total (Cash & Acc. Equity %)
+* **Safety** - Max Drawdown Day (Cash & Acc. Equity %)
 * **Safety** - Max Loss No. Days
+* **Safety** - Daily orders
+* **Safety** - Max Contracts
 * **Restrictions** - Backtest Range
 * **Restrictions** - Hours Range (No Nights)
 * **Restrictions** - Anti-News Trading
@@ -19,7 +21,7 @@ A **simple** boilerplate starter template for your pine script coding.
 ## Instructions
 1. Run code and see if it works out of the box!
 
-2. Review the first 10 lines and edit the `strategy` options and `strategy.risk` safety features as this will **override** any custom coding you do and GUI options set.
+2. Review the first 4 lines and edit the `strategy` options as this may **override** any custom coding you do and GUI options set.
 
 3. Anything between the EDIT tags is for your custom code, sample code displayed there.
 
