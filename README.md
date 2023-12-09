@@ -9,7 +9,8 @@ A **simple** boilerplate starter template for your pine script coding.
 * **Safety** - Max Contracts
 * **Restrictions** - Backtest Range
 * **Restrictions** - Hours Range (No Nights)
-* **Restrictions** - Anti-News Trading
+* **Risk** - Anti-News Trading
+* **Risk** - Wait No. candles after loss 
 * **Trading** - Take Profit / Stop Loss
 * **Trading** - Recent High/Low with Risk Reward Ratio
 * **Trades** - Only Buy or Sell Option
