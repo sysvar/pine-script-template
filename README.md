@@ -68,18 +68,22 @@ A simple working example of some custom code in an organised fashion, also inclu
 // === USER STRATEGY ===
 
 // Variables
-//  - none yet
+var usr_logic_ema_buy = false
+var usr_logic_ema_sell = false
 
 // Input
-usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+usr_input_ema_length = input.int(9, step=1, title="EMA Length", group="User Strategy")
+usr_input_ema_diff= input.float(0.5, step=0.1, title="EMA Above/Below Pips", group="User Strategy")
 
 // Function
 usr_funct_ema = ta.ema(close, usr_input_ema_length)
 
 // Logic
-usr_logic_ema_diff = close - usr_funct_ema
-usr_logic_ema_buy = usr_logic_ema_diff > 3
-usr_logic_ema_sell = usr_logic_ema_diff < 3
+if close > (usr_funct_ema + (usr_input_ema_diff/10000))      // 3 Pips Above EMA then Sell (Reversal)
+    usr_logic_ema_sell := true
+
+if close < (usr_funct_ema - (usr_input_ema_diff/10000))      // 3 Pips Below EMA then Buy (Reversal)
+    usr_logic_ema_buy := true
 
 // Plot
 plot(usr_funct_ema, color=color.yellow, title="EMA")
