@@ -3,44 +3,107 @@
 
 strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=true, pyramiding=0, initial_capital=40000, default_qty_type=strategy.fixed, default_qty_value=500000, currency=currency.USD, commission_type=strategy.commission.cash_per_contract, commission_value=0.000003)
 
-
-// === CORE SAFETY FEATURES ===
-//strategy.risk.max_drawdown(value=1000, type=strategy.cash)
-//strategy.risk.max_position_size(contracts=500000)
-//strategy.risk.max_cons_loss_days(count=5)
-
-
 // === CORE VARIABLES ===
-var sys_logic_buy = false
-var sys_logic_sell = false
 var usr_logic_buy = false
 var usr_logic_sell = false
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// === USER STRATEGY ===
+
+// Variables
+var usr_logic_ema_example = false
+
+// Input
+usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+
+// Function
+usr_funct_ema = ta.ema(close, usr_input_ema_length)
+
+// Logic
+usr_logic_ema_diff = close - usr_funct_ema
+usr_logic_ema_buy = usr_logic_ema_diff > 3
+usr_logic_ema_sell = usr_logic_ema_diff < 3
+
+// Plot
+plot(usr_funct_ema, color=color.yellow, title="EMA")
+
+// Decision
+if usr_logic_ema_buy == true
+    usr_logic_buy := true
+
+if usr_logic_ema_sell == true
+    usr_logic_sell := true
+
+// Remember to RESET THESE VARIABLES at the END of the SCRIPT !
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// === CORE VARIABLES ===
+var sys_group_name_dire="Trading Entry -----------------------------------------------------------------------------------"
+var sys_logic_buy = false
+var sys_logic_sell = false
+
+
 // === CORE GUI INPUTS ===
-sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions", tooltip="Not for live trading")
-sys_input_backtest_start = input.time(timestamp("14 Nov 2023 07:00 +0000"), "Start Date", group="Backtest Range Restrictions", tooltip="UTC 0 Timezone Fixed")
-sys_input_backtest_end = input.time(timestamp("14 Nov 2023 19:00 +0000"), "End Date", group="Backtest Range Restrictions", tooltip="UTC 0 Timezone Fixed")
-
-sys_input_time_zone = input.string('UTC', title='Timezone', options = ["UTC-12", "UTC-11", "UTC-10", "UTC-9", "UTC-8", "UTC-7", "UTC-6", "UTC-5", "UTC-4", "UTC-3", "UTC-2", "UTC-1", "UTC", "UTC+0", "UTC+1", "UTC+2", "UTC+3", "UTC+4", "UTC+5", "UTC+6", "UTC+7", "UTC+8", "UTC+9", "UTC+10", "UTC+11", "UTC+12"], group='Trading Time Range Restrictions')
-sys_input_time_hours = input.session("0700-1900", "Allowed hours", group="Trading Time Range Restrictions")
-sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions", tooltip="1 = Sunday, 7 = Saturday")
-
-sys_input_dire_buy = input.bool(true, title='Trade Buy', group="Trading Entry", tooltip="Only Buy")
-sys_input_dire_sell = input.bool(true, title='Trade Sell', group="Trading Entry", tooltip="Only Sell")
-sys_input_dire_reverse = input.bool(true, title='Reverse Buy/Sell', group="Trading Entry", tooltip="When entering trade, reverse entry")
+sys_input_dire_buy = input.bool(true, title='Trade Buy', group=sys_group_name_dire, tooltip="Only Buy")
+sys_input_dire_sell = input.bool(true, title='Trade Sell', group=sys_group_name_dire, tooltip="Only Sell")
+sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group=sys_group_name_dire, tooltip="When entering trade, reverse entry")
 
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
 sys_input_exit_hlrr = input.bool(false, "(C) Recent High/Low and Risk Reward Ratio", group="Trading Exit (Select Only 1)")
 
-sys_input_risk_tpslProfit = input.float(9, step = 1, title="(A) Take Profit Pips", group="Risk Management")
-sys_input_risk_tpslLoss = input.float(4, step = 1, title="(A) Stop Loss Pips", group="Risk Management")
+sys_input_risk_tpslProfit = input.float(9, step = 0.1, title="(A) Take Profit Pips", group="Risk Management")
+sys_input_risk_tpslLoss = input.float(4, step = 0.1, title="(A) Stop Loss Pips", group="Risk Management")
 sys_input_risk_hlrrLookBack = input.int(20, step = 1, title="(C) Lookback Period High/Low", group="Risk Management")
 sys_input_risk_hlrrExtraPips = input.float(0.5, step = 0.1, title="(C) Extra Pips Above/Below", group="Risk Management")
 sys_input_risk_hlrrRiskReward = input.float(1.5, step = 0.1, title="(C) Risk Reward Ratio", group="Risk Management")
 sys_input_cand_newsPips = input.int(7, title="News Pip Trigger", group="Risk Management")
 sys_input_cand_newsCandles = input.int(10, title="News Con. After Candles", group="Risk Management")
+
+sys_input_backtest_range = input.bool(false, "Enable Backtesting Dates", group="Backtest Range Restrictions", tooltip="Not for live trading")
+sys_input_backtest_start = input.time(timestamp("14 Nov 2023 07:00 +0000"), "Start Date (UTC 0)", group="Backtest Range Restrictions")
+sys_input_backtest_end = input.time(timestamp("14 Nov 2023 19:00 +0000"), "End Date (UTC 0)", group="Backtest Range Restrictions")
+
+sys_input_time_zone = input.string('UTC', title='Timezone', options = ["UTC-12", "UTC-11", "UTC-10", "UTC-9", "UTC-8", "UTC-7", "UTC-6", "UTC-5", "UTC-4", "UTC-3", "UTC-2", "UTC-1", "UTC", "UTC+0", "UTC+1", "UTC+2", "UTC+3", "UTC+4", "UTC+5", "UTC+6", "UTC+7", "UTC+8", "UTC+9", "UTC+10", "UTC+11", "UTC+12"], group='Trading Time Range Restrictions')
+sys_input_time_hours = input.session("0700-1900", "Allowed hours", group="Trading Time Range Restrictions")
+sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions", tooltip="1 = Sunday, 7 = Saturday")
+
+sys_input_general_positionSize = input.int(500000, step=1, maxval=9999999999999999, title="Position Size", group="General Management", tooltip="Units for trade")
+
+sys_input_safety = input.bool(false, "Enable Safety Settings", group="Safety Management", tooltip="Avoid with backtesting")
+sys_input_safety_positionSize = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Position Size", group="Safety Management", tooltip="Units for trade")
+sys_input_safety_drawdownCash = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Drawdown Cash", group="Safety Management", tooltip="Money lost in total")
+sys_input_safety_drawdownEquity = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Drawdown Account Equity %", group="Safety Management", tooltip="Percentage of Account Equity")
+sys_input_safety_consLossDays = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Consecutive Days Lost", group="Safety Management", tooltip="Days in a row lost")
+sys_input_safety_intradayTrades = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Intra-Day Trades", group="Safety Management", tooltip="Max trades within a day")
+sys_input_safety_intradayLossCash = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Day Cash Loss", group="Safety Management", tooltip="Max loss within a day")
+sys_input_safety_intradayLossEquity = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Day Account Equity % Loss", group="Safety Management", tooltip="Max loss within a day")
+
+
+// === CORE SAFETY FEATURES ===
+strategy.risk.max_position_size(sys_input_safety ? sys_input_safety_positionSize : 9999999999999999)
+strategy.risk.max_drawdown(sys_input_safety ? sys_input_safety_drawdownCash : 9999999999999999, type=strategy.cash)
+strategy.risk.max_drawdown(sys_input_safety ? sys_input_safety_drawdownEquity : 9999999999999999, type=strategy.percent_of_equity)
+strategy.risk.max_cons_loss_days(sys_input_safety ? sys_input_safety_consLossDays : 9999999999999999)
+strategy.risk.max_intraday_filled_orders(sys_input_safety ? sys_input_safety_intradayTrades : 9999999999999999)
+strategy.risk.max_intraday_loss(sys_input_safety ? sys_input_safety_intradayLossCash : 9999999999999999, type=strategy.cash)
+strategy.risk.max_intraday_loss(sys_input_safety ? sys_input_safety_intradayLossEquity : 9999999999999999, type=strategy.percent_of_equity)
 
 
 // === CORE FUNCT/LOGIC ===
@@ -73,51 +136,7 @@ bgcolor(sys_logic_backtest_outRange ? color.new(color.red, 90) : na, title="Back
 bgcolor(sys_logic_trading_outRange ? color.new(color.red, 90) : na, title="Non-Trading Range")
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                                    //
-//      EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT      //
-//                                                                                                                    //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// === USER STRATEGY ===
-
-// Variables
-var usr_group_name="User Strategy -----------------------------------------------------------------------------------"
-var usr_logic_ema = false
-
-// Input
-//usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
-usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group=usr_group_name)
-
-// Function
-usr_funct_ema = ta.ema(close, usr_input_ema_length)
-
-// Logic
-usr_logic_ema_diff = close - usr_funct_ema
-usr_logic_ema_buy = usr_logic_ema_diff > 3
-usr_logic_ema_sell = usr_logic_ema_diff < 3
-
-// Plot
-plot(usr_funct_ema, color=color.yellow, title="EMA")
-
-// Decision
-if usr_logic_ema_buy == true
-    usr_logic_buy := true
-
-if usr_logic_ema_sell == true
-    usr_logic_sell := true
-
-// Remember to RESET THESE VARIABLES at the END of the SCRIPT !
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                                    //
-//      EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT      //
-//                                                                                                                    //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 // === FINAL LOGIC ===
@@ -143,24 +162,24 @@ if usr_logic_sell == true
 if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_input_dire_buy and sys_logic_candle_news and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
-        strategy.entry("TPSL Buy Entry", strategy.long)
+        strategy.entry("TPSL Buy Entry", strategy.long, sys_input_general_positionSize)
         strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_logic_tpsl_loss, profit=sys_logic_tpsl_profit)
     if sys_input_exit_tpts
         log.info("Buy - Take Profit Trailing Stop NOT IMPLEMENTED YET")
     if sys_input_exit_hlrr
-        strategy.entry("HLRR Buy Entry", strategy.long)
+        strategy.entry("HLRR Buy Entry", strategy.long, sys_input_general_positionSize)
         strategy.exit("HLRR Buy Exit", from_entry ="HLRR Buy Entry", loss=sys_logic_hlrr_buyEntry, profit=sys_logic_hlrr_buyExit)
 
 
 if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
-        strategy.entry("TPSL Sell Entry", strategy.short)
+        strategy.entry("TPSL Sell Entry", strategy.short, sys_input_general_positionSize)
         strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_logic_tpsl_loss, profit=sys_logic_tpsl_profit)
     if sys_input_exit_tpts
         log.info("Sell - Take Profit Trailing Stop NOT IMPLEMENTED YET")
     if sys_input_exit_hlrr
-        strategy.entry("HLRR Sell Entry", strategy.short)
+        strategy.entry("HLRR Sell Entry", strategy.short, sys_input_general_positionSize)
         strategy.exit("HLRR Sell Exit", from_entry ="HLRR Sell Entry", loss=sys_logic_hlrr_sellEntry, profit=sys_logic_hlrr_sellExit)
 
 
@@ -174,9 +193,10 @@ usr_logic_buy := false
 usr_logic_sell := false
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                                    //
-//      EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT      //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
 //                                                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -184,3 +204,4 @@ usr_logic_sell := false
 // === USER RESET VARIABLES ===
 usr_logic_ema_buy := false
 usr_logic_ema_sell := false
+
