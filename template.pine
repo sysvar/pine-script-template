@@ -19,18 +19,22 @@ var usr_logic_sell = false
 // === USER STRATEGY ===
 
 // Variables
-var usr_logic_ema_example = false
+var usr_logic_ema_buy = false
+var usr_logic_ema_sell = false
 
 // Input
-usr_input_ema_length = input.int(9, step = 1, title="EMA Length", group="User Strategy")
+usr_input_ema_length = input.int(9, step=1, title="EMA Length", group="User Strategy")
+usr_input_ema_diff= input.float(0.5, step=0.1, minval=0.1, maxval=1000, title="EMA Above/Below Pips", group="User Strategy", tooltip="Trigger Entry when above or below EMA by this number of pips")
 
 // Function
 usr_funct_ema = ta.ema(close, usr_input_ema_length)
 
 // Logic
-usr_logic_ema_diff = close - usr_funct_ema
-usr_logic_ema_buy = usr_logic_ema_diff > 3
-usr_logic_ema_sell = usr_logic_ema_diff < 3
+if close > (usr_funct_ema + (usr_input_ema_diff/10000))      // 3 Pips Above EMA then Sell (Reversal)
+    usr_logic_ema_sell := true
+
+if close < (usr_funct_ema - (usr_input_ema_diff/10000))      // 3 Pips Below EMA then Buy (Reversal)
+    usr_logic_ema_buy := true
 
 // Plot
 plot(usr_funct_ema, color=color.yellow, title="EMA")
@@ -60,8 +64,7 @@ var sys_logic_sell = false
 
 
 // === CORE GUI INPUTS ===
-sys_input_dire_buy = input.bool(true, title='Trade Buy', group=sys_group_name_dire, tooltip="Only Buy")
-sys_input_dire_sell = input.bool(true, title='Trade Sell', group=sys_group_name_dire, tooltip="Only Sell")
+sys_input_dire = input.string('Both', title='Trade Direction', options = ["Both", "Only Buy", "Only Sell", "None"], group=sys_group_name_dire)
 sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group=sys_group_name_dire, tooltip="When entering trade, reverse entry")
 
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
@@ -104,9 +107,16 @@ strategy.risk.max_cons_loss_days(sys_input_safety ? sys_input_safety_consLossDay
 strategy.risk.max_intraday_filled_orders(sys_input_safety ? sys_input_safety_intradayTrades : 9999999999999999)
 strategy.risk.max_intraday_loss(sys_input_safety ? sys_input_safety_intradayLossCash : 9999999999999999, type=strategy.cash)
 strategy.risk.max_intraday_loss(sys_input_safety ? sys_input_safety_intradayLossEquity : 9999999999999999, type=strategy.percent_of_equity)
+strategy.risk.allow_entry_in(sys_input_dire == "Only Buy" ? strategy.direction.long : (sys_input_dire == "Only Sell" ? strategy.direction.short : strategy.direction.all))
 
 
 // === CORE FUNCT/LOGIC ===
+if sys_input_dire == "None"
+    log.info("usr_logic_buy: {0}", usr_logic_buy)
+    log.info("usr_logic_sell: {0}", usr_logic_sell)
+    usr_logic_buy := false
+    usr_logic_sell := false
+
 sys_logic_backtest = sys_input_backtest_range == false or (sys_input_backtest_range == true and (time >= sys_input_backtest_start and time <= sys_input_backtest_end))
 
 sys_logic_time = time(timeframe.period, sys_input_time_hours + ":" + sys_input_time_days, sys_input_time_zone)
@@ -159,7 +169,7 @@ if usr_logic_sell == true
 
 // === CORE POSITION EXECUTION ===
 
-if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_input_dire_buy and sys_logic_candle_news and sys_logic_position
+if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_candle_news and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
         strategy.entry("TPSL Buy Entry", strategy.long, sys_input_general_positionSize)
@@ -171,7 +181,7 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_input_dire_bu
         strategy.exit("HLRR Buy Exit", from_entry ="HLRR Buy Entry", loss=sys_logic_hlrr_buyEntry, profit=sys_logic_hlrr_buyExit)
 
 
-if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_input_dire_sell and sys_logic_candle_news and sys_logic_position
+if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_candle_news and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_candle_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_candle_news, sys_logic_position)
     if sys_input_exit_tpsl
         strategy.entry("TPSL Sell Entry", strategy.short, sys_input_general_positionSize)
