@@ -126,6 +126,7 @@ Please continue the use of these variable formatting prefixes to keep your code 
 ## Todo
 * Consolidation and Trending Market Trade Switches
 * Add additional simple examples to readme
+* Determine if there is other ways to detect news
 * Trailing Stop Loss
 * Webhook Alerts
 
