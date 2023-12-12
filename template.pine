@@ -181,6 +181,7 @@ if usr_logic_sell == true
 if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
+        //alert('1234567891234,buy,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
         strategy.entry("TPSL Buy Entry", strategy.long, sys_input_general_positionSize)
         strategy.exit("TPSL Buy Exit", from_entry ="TPSL Buy Entry", loss=sys_logic_tpsl_loss, profit=sys_logic_tpsl_profit)
     if sys_input_exit_tpts
@@ -193,6 +194,7 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news an
 if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
+        //alert('1234567891234,sell,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
         strategy.entry("TPSL Sell Entry", strategy.short, sys_input_general_positionSize)
         strategy.exit("TPSL Sell Exit", from_entry ="TPSL Sell Entry", loss=sys_logic_tpsl_loss, profit=sys_logic_tpsl_profit)
     if sys_input_exit_tpts
