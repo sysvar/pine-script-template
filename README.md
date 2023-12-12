@@ -15,6 +15,7 @@ A **simple** boilerplate starter template for your pine script coding.
 * **Trading** - Recent High/Low with Risk Reward Ratio
 * **Trades** - Only Buy or Sell Option
 * **Trades** - Reverse Buy & Sell Entry
+* **Automation** - Sample PineConnector Trade Automation Alert
 * **Highlight** - Outside backtest times
 * **Highlight** - Outside trading times
 
@@ -122,6 +123,9 @@ Please continue the use of these variable formatting prefixes to keep your code 
 ### Prefixes (Level 4)
  - \*\*\*_\*\*\*\*\*\_backtest\_**start** = Category Item Example 1
  - \*\*\*_\*\*\*\*\*\_backtest\_**end** = Category Item Example 2
+
+## Trade Automation?
+If you've got a working strategy and looking to have it trade automatically then review pinescript trading automation platforms, one such is [PineConnector](https://www.pineconnector.com/). A sample has been included in the trade execution section in the form of a commented alert, more examples are present [here](https://www.tradingview.com/script/8XxtDrdc-PineConnector-Adding-alert-and-plotshape/).
 
 ## Todo
 * Consolidation and Trending Market Trade Switches
