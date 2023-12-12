@@ -127,6 +127,8 @@ Please continue the use of these variable formatting prefixes to keep your code 
 ## Trade Automation?
 If you've got a working strategy and looking to have it trade automatically then review pinescript trading automation platforms, one such is [PineConnector](https://www.pineconnector.com/). A sample has been included in the trade execution section in the form of a commented alert, more examples are present [here](https://www.tradingview.com/script/8XxtDrdc-PineConnector-Adding-alert-and-plotshape/).
 
+There is [1 bug](https://github.com/sysvar/pine-script-template/issues/1) with sys_logic_time which results in alerts not respecting the allowed trading time. You should restrict the EA trading times in Metatrader until this is resolved. Take note of exchange hours difference when setting that.
+
 ## Todo
 * Consolidation and Trending Market Trade Switches
 * Add additional simple examples to readme
