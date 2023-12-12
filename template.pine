@@ -146,6 +146,9 @@ sys_logic_hlrr_buyEntry = (((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_
 sys_logic_hlrr_sellExit = sys_logic_hlrr_sellEntry * sys_input_risk_hlrrRiskReward
 sys_logic_hlrr_buyExit = sys_logic_hlrr_buyEntry * sys_input_risk_hlrrRiskReward
 
+sys_logic_alert_profit = sys_input_risk_tpslProfit / 10
+sys_logic_alert_loss = sys_input_risk_tpslLoss / 10
+
 
 // === CORE GRAPH SHADING ===
 bgcolor(sys_logic_backtest_outRange ? color.new(color.red, 90) : na, title="Backtest Range")
