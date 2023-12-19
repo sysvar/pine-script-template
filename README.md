@@ -21,7 +21,7 @@ A **simple** boilerplate starter template for your pine script coding.
 
 
 ## Instructions
-1. Run code and see if it works out of the box!
+1. Run code on **EUR/USD** symbol and see if it works out of the box!
 
 2. Review the first 4 lines and edit the `strategy` options as this may **override** any custom coding you do and GUI options set.
 
