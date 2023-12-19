@@ -21,6 +21,7 @@ var usr_logic_sell = false
 // Variables
 var usr_logic_ema_buy = false
 var usr_logic_ema_sell = false
+var usr_logic_pipVlaue = int(10000)
 
 // Input
 usr_input_ema_length = input.int(9, step=1, title="EMA Length", group="User Strategy")
@@ -30,10 +31,10 @@ usr_input_ema_diff= input.float(0.5, step=0.1, minval=0.1, maxval=1000, title="E
 usr_funct_ema = ta.ema(close, usr_input_ema_length)
 
 // Logic
-if close > (usr_funct_ema + (usr_input_ema_diff/10000))      // 3 Pips Above EMA then Sell (Reversal)
+if close > (usr_funct_ema + (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 Pips Above EMA then Sell (Reversal)
     usr_logic_ema_sell := true
 
-if close < (usr_funct_ema - (usr_input_ema_diff/10000))      // 3 Pips Below EMA then Buy (Reversal)
+if close < (usr_funct_ema - (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 Pips Below EMA then Buy (Reversal)
     usr_logic_ema_buy := true
 
 // Plot
@@ -58,14 +59,18 @@ if usr_logic_ema_sell == true
 
 
 // === CORE VARIABLES ===
-var sys_group_name_dire="Trading Entry -----------------------------------------------------------------------------------"
+var sys_group_name_gen="General -----------------------------------------------------------------------------------------"
+
 var sys_logic_buy = false
 var sys_logic_sell = false
 
 
 // === CORE GUI INPUTS ===
-sys_input_dire = input.string('Both', title='Trade Direction', options = ["Both", "Only Buy", "Only Sell", "None"], group=sys_group_name_dire)
-sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group=sys_group_name_dire, tooltip="When entering trade, reverse entry")
+sys_input_pip = input.string('10000', title="Pip Symbol Value", options = ["1", "10", "100", "1000", "10000", "100000"], group=sys_group_name_gen, tooltip="Count No. of digits after decimal, for example: EUR/USD with a price of 1.09395 = 10000, because 5 digits after decimal")
+sys_input_general_positionSize = input.int(500000, step=1, maxval=9999999999999999, title="Position Size", group=sys_group_name_gen, tooltip="Units for trade")
+
+sys_input_dire = input.string('Both', title='Trade Direction', options = ["Both", "Only Buy", "Only Sell", "None"], group="Trading Entry")
+sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Entry", tooltip="When entering trade, reverse entry")
 
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
@@ -89,8 +94,6 @@ sys_input_time_zone = input.string('UTC', title='Timezone', options = ["UTC-12",
 sys_input_time_hours = input.session("0700-1900", "Allowed hours", group="Trading Time Range Restrictions")
 sys_input_time_days = input.string("123456", "Allowed Days", group="Trading Time Range Restrictions", tooltip="1 = Sunday, 7 = Saturday")
 
-sys_input_general_positionSize = input.int(500000, step=1, maxval=9999999999999999, title="Position Size", group="General Management", tooltip="Units for trade")
-
 sys_input_safety = input.bool(false, "Enable Safety Settings", group="Safety Management", tooltip="Avoid with backtesting")
 sys_input_safety_positionSize = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Position Size", group="Safety Management", tooltip="Units for trade")
 sys_input_safety_drawdownCash = input.int(9999999999999999, step=1, maxval=9999999999999999, title="Max Drawdown Cash", group="Safety Management", tooltip="Money lost in total")
@@ -113,6 +116,8 @@ strategy.risk.allow_entry_in(sys_input_dire == "Only Buy" ? strategy.direction.l
 
 
 // === CORE FUNCT/LOGIC ===
+sys_funct_pip = str.tonumber(sys_input_pip)
+
 if sys_input_dire == "None"
     log.info("usr_logic_buy: {0}", usr_logic_buy)
     log.info("usr_logic_sell: {0}", usr_logic_sell)
@@ -127,7 +132,7 @@ sys_funct_risk_waitLoss = (strategy.losstrades > strategy.losstrades[1]) and (st
 sys_funct_risk_barSince = ta.barssince(sys_funct_risk_waitLoss)
 sys_logic_waitLoss = not (sys_funct_risk_barSince < sys_input_risk_waitLoss)
 
-sys_logic_risk_newsdecimal = sys_input_risk_newsPips / 10000  // Important conversion
+sys_logic_risk_newsdecimal = sys_input_risk_newsPips / sys_funct_pip  // Important conversion
 sys_funct_news = array.new_float(0)
 for i = 0 to sys_input_risk_newsCandles - 1
     array.push(sys_funct_news, i == 0 ? high - low : high[i] - low[i])
@@ -141,8 +146,8 @@ sys_logic_trading_outRange  = not sys_logic_time
 sys_logic_tpsl_profit = sys_input_risk_tpslProfit * 10
 sys_logic_tpsl_loss = sys_input_risk_tpslLoss * 10
 
-sys_logic_hlrr_sellEntry = ((ta.highest(high, sys_input_risk_hlrrLookBack) + (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000
-sys_logic_hlrr_buyEntry = (((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_input_risk_hlrrExtraPips / 10000)) - close) * 100000) * -1
+sys_logic_hlrr_sellEntry = (((ta.highest(high, sys_input_risk_hlrrLookBack) + (sys_input_risk_hlrrExtraPips / sys_funct_pip)) - close) * sys_funct_pip) * 10
+sys_logic_hlrr_buyEntry = ((((ta.lowest(low, sys_input_risk_hlrrLookBack) - (sys_input_risk_hlrrExtraPips / sys_funct_pip)) - close) * sys_funct_pip) * 10) * -1
 sys_logic_hlrr_sellExit = sys_logic_hlrr_sellEntry * sys_input_risk_hlrrRiskReward
 sys_logic_hlrr_buyExit = sys_logic_hlrr_buyEntry * sys_input_risk_hlrrRiskReward
 
@@ -225,4 +230,3 @@ usr_logic_sell := false
 // === USER RESET VARIABLES ===
 usr_logic_ema_buy := false
 usr_logic_ema_sell := false
-
