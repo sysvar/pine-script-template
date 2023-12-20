@@ -1,7 +1,7 @@
 //@version=5
 // Author https://github.com/sysvar/pine-script-template
 
-strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=true, pyramiding=0, initial_capital=40000, default_qty_type=strategy.fixed, default_qty_value=500000, currency=currency.GBP, commission_type=strategy.commission.cash_per_contract, commission_value=0.0000225)
+strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=true, pyramiding=0, initial_capital=40000, default_qty_value=500000, commission_value=0.0000225, default_qty_type=strategy.fixed, commission_type=strategy.commission.cash_per_contract, currency=currency.GBP, format=format.price, precision=5)
 
 // === CORE VARIABLES ===
 var usr_logic_buy = false
