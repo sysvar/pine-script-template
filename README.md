@@ -15,6 +15,7 @@ A **simple** boilerplate starter template for your pine script coding.
 * **Trading** - Recent High/Low with Risk Reward Ratio
 * **Trades** - Only Buy or Sell Option
 * **Trades** - Reverse Buy & Sell Entry
+* **Trades** - Alternate between Buy & Sell Trades (Prevent same direciton twice)
 * **Automation** - Sample PineConnector Trade Automation Alert
 * **Highlight** - Outside backtest times
 * **Highlight** - Outside trading times
