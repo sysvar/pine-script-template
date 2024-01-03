@@ -63,6 +63,7 @@ var sys_group_name_gen="General ------------------------------------------------
 
 var sys_logic_buy = false
 var sys_logic_sell = false
+var string sys_logic_direction = ""
 
 
 // === CORE GUI INPUTS ===
