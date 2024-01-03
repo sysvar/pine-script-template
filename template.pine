@@ -63,6 +63,7 @@ var sys_group_name_gen="General ------------------------------------------------
 
 var sys_logic_buy = false
 var sys_logic_sell = false
+var string sys_logic_direction = ""
 
 
 // === CORE GUI INPUTS ===
@@ -71,6 +72,7 @@ sys_input_general_positionSize = input.int(500000, step=1, maxval=99999999999999
 
 sys_input_dire = input.string('Both', title='Trade Direction', options = ["Both", "Only Buy", "Only Sell", "None"], group="Trading Entry")
 sys_input_dire_reverse = input.bool(false, title='Reverse Buy/Sell', group="Trading Entry", tooltip="When entering trade, reverse entry")
+sys_input_dire_alternate = input.bool(false, title='Alternate Between Buy & Sell', group="Trading Entry", tooltip="E.g. Buy Sell Buy Sell Buy, not Buy Buy Sell Buy Sell Sell")
 
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
@@ -183,7 +185,8 @@ if usr_logic_sell == true
 
 // === CORE POSITION EXECUTION ===
 
-if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position
+if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeBuy") or sys_input_dire_alternate == false)
+    sys_logic_direction := "LastTradeBuy"
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
         //alert('1234567891234,buy,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
@@ -196,7 +199,8 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news an
         strategy.exit("HLRR Buy Exit", from_entry ="HLRR Buy Entry", loss=sys_logic_hlrr_buyEntry, profit=sys_logic_hlrr_buyExit)
 
 
-if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position
+if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeSell") or sys_input_dire_alternate == false)
+    sys_logic_direction := "LastTradeSell"
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
         //alert('1234567891234,sell,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
