@@ -19,6 +19,7 @@ A **simple** boilerplate starter template for your pine script coding.
 * **Automation** - Sample PineConnector Trade Automation Alert
 * **Highlight** - Outside backtest times
 * **Highlight** - Outside trading times
+* **Table** - Stats Table Example
 
 
 ## Instructions
