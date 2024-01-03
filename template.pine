@@ -63,6 +63,8 @@ var sys_group_name_gen="General ------------------------------------------------
 
 var sys_logic_buy = false
 var sys_logic_sell = false
+var sys_logic_counter_buy = 0
+var sys_logic_counter_sell = 0
 var string sys_logic_direction = ""
 
 
@@ -187,6 +189,7 @@ if usr_logic_sell == true
 
 if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeBuy") or sys_input_dire_alternate == false)
     sys_logic_direction := "LastTradeBuy"
+    sys_logic_counter_buy += 1
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
         //alert('1234567891234,buy,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
@@ -201,6 +204,7 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news an
 
 if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeSell") or sys_input_dire_alternate == false)
     sys_logic_direction := "LastTradeSell"
+    sys_logic_counter_sell += 1
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
         //alert('1234567891234,sell,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
@@ -211,6 +215,22 @@ if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news a
     if sys_input_exit_hlrr
         strategy.entry("HLRR Sell Entry", strategy.short, sys_input_general_positionSize)
         strategy.exit("HLRR Sell Exit", from_entry ="HLRR Sell Entry", loss=sys_logic_hlrr_sellEntry, profit=sys_logic_hlrr_sellExit)
+
+
+
+// === CORE STATS TABLE ===
+
+var sys_table_stats = table.new(position.bottom_left, columns = 2, rows = 3)  //bgcolor = color.yellow, border_width = 1
+//table.cell(sys_table_stats, 0, 0, "Title",                              bgcolor = #aaaaaa,     width = 7, height = 4)
+
+table.cell(sys_table_stats, 0, 0, "Trades Buy",                         bgcolor = #aaaaaa,     width = 9, height = 4)
+table.cell(sys_table_stats, 1, 0, str.tostring(sys_logic_counter_sell), bgcolor = color.green, width = 5, height = 4)
+
+table.cell(sys_table_stats, 0, 1, "Trades Sell",                        bgcolor = #aaaaaa,     width = 9, height = 4)
+table.cell(sys_table_stats, 1, 1, str.tostring(sys_logic_counter_buy),  bgcolor = color.red,   width = 5, height = 4)
+
+table.cell(sys_table_stats, 0, 2, "",                                                          width = 9, height = 6)
+table.cell(sys_table_stats, 1, 2, "",                                                          width = 5, height = 6)
 
 
 
