@@ -3,66 +3,13 @@
 
 strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=true, pyramiding=0, initial_capital=40000, default_qty_value=500000, commission_value=0.0000225, default_qty_type=strategy.fixed, commission_type=strategy.commission.cash_per_contract, currency=currency.GBP, format=format.price, precision=5)
 
-// === CORE VARIABLES ===
-var usr_logic_buy = false
-var usr_logic_sell = false
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                                    //
-//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
-//                                                                                                                    //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// === USER STRATEGY ===
-
-// Variables
-var usr_logic_ema_buy = false
-var usr_logic_ema_sell = false
-var usr_logic_pipVlaue = int(10000)
-
-// Input
-usr_input_ema_length = input.int(9, step=1, title="EMA Length", group="User Strategy")
-usr_input_ema_diff= input.float(0.5, step=0.1, minval=0.1, maxval=1000, title="EMA Above/Below Pips", group="User Strategy", tooltip="Trigger Entry when above or below EMA by this number of pips")
-
-// Function
-usr_funct_ema = ta.ema(close, usr_input_ema_length)
-
-// Logic
-if close > (usr_funct_ema + (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 Pips Above EMA then Sell (Reversal)
-    usr_logic_ema_sell := true
-
-if close < (usr_funct_ema - (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 Pips Below EMA then Buy (Reversal)
-    usr_logic_ema_buy := true
-
-// Plot
-plot(usr_funct_ema, color=color.yellow, title="EMA")
-
-// Decision
-if usr_logic_ema_buy == true
-    usr_logic_buy := true
-
-if usr_logic_ema_sell == true
-    usr_logic_sell := true
-
-// Remember to RESET THESE VARIABLES at the END of the SCRIPT !
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                                    //
-//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
-//                                                                                                                    //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 // === CORE VARIABLES ===
 var sys_group_name_gen="General -----------------------------------------------------------------------------------------"
-
 var sys_logic_buy = false
 var sys_logic_sell = false
+var usr_logic_buy = false
+var usr_logic_sell = false
 var sys_logic_counter_buy = 0
 var sys_logic_counter_sell = 0
 var string sys_logic_direction = ""
@@ -158,17 +105,82 @@ sys_logic_hlrr_buyExit = sys_logic_hlrr_buyEntry * sys_input_risk_hlrrRiskReward
 sys_logic_alert_profit = sys_input_risk_tpslProfit / 10
 sys_logic_alert_loss = sys_input_risk_tpslLoss / 10
 
+var sys_logic_pl = string("Neutral")
+sys_logic_pl_calc = strategy.closedtrades.profit(strategy.closedtrades - 1) + strategy.closedtrades.commission(strategy.closedtrades - 1)
+sys_logic_pl := sys_logic_pl_calc < 0 ? "Loss" : sys_logic_pl_calc > 0 ? "Profit" : "Neutral"
+
+
+// === CORE STATS TABLE ===
+var sys_table_stats = table.new(position.bottom_left, columns = 2, rows = 3)  //bgcolor = color.yellow, border_width = 1
+//table.cell(sys_table_stats, 0, 0, "Title",                              bgcolor = #aaaaaa,     width = 7, height = 4)
+
+table.cell(sys_table_stats, 0, 0, "Trades Buy",                         bgcolor = #aaaaaa,     width = 9, height = 4)
+table.cell(sys_table_stats, 1, 0, str.tostring(sys_logic_counter_sell), bgcolor = color.green, width = 5, height = 4)
+
+table.cell(sys_table_stats, 0, 1, "Trades Sell",                        bgcolor = #aaaaaa,     width = 9, height = 4)
+table.cell(sys_table_stats, 1, 1, str.tostring(sys_logic_counter_buy),  bgcolor = color.red,   width = 5, height = 4)
+
+table.cell(sys_table_stats, 0, 2, "",                                                          width = 9, height = 6)
+table.cell(sys_table_stats, 1, 2, "",                                                          width = 5, height = 6)
+
 
 // === CORE GRAPH SHADING ===
 bgcolor(sys_logic_backtest_outRange ? color.new(color.red, 90) : na, title="Backtest Range")
 bgcolor(sys_logic_trading_outRange ? color.new(color.red, 90) : na, title="Non-Trading Range")
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT  ⇣   EDIT  ⇣  EDIT  ⇣  EDIT  ⇣  EDIT    //
+//                                                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// === FINAL LOGIC ===
+// === USER STRATEGY ===
 
+// Variables
+var usr_logic_ema_buy = false
+var usr_logic_ema_sell = false
+var usr_logic_pipVlaue = int(10000)
+
+// Input
+usr_input_ema_length = input.int(9, step=1, title="EMA Length", group="User Strategy")
+usr_input_ema_diff= input.float(0.5, step=0.1, minval=0.1, maxval=1000, title="EMA Above/Below Pips", group="User Strategy", tooltip="Trigger Entry when above or below EMA by this number of pips")
+
+// Function
+usr_funct_ema = ta.ema(close, usr_input_ema_length)
+
+// Logic
+if close > (usr_funct_ema + (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 Pips Above EMA then Sell (Reversal)
+    usr_logic_ema_sell := true
+
+if close < (usr_funct_ema - (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 Pips Below EMA then Buy (Reversal)
+    usr_logic_ema_buy := true
+
+// Plot
+plot(usr_funct_ema, color=color.yellow, title="EMA")
+
+// Decision
+if usr_logic_ema_buy == true
+    usr_logic_buy := true
+
+if usr_logic_ema_sell == true
+    usr_logic_sell := true
+
+// Remember to RESET THESE VARIABLES at the END of the SCRIPT !
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//    EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT  ⇡   EDIT  ⇡  EDIT  ⇡  EDIT  ⇡  EDIT    //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// === FINAL LOGIC ===
 //log.info("usr_logic_buy: {0}", usr_logic_buy)
 if usr_logic_buy == true
     if sys_input_dire_reverse
@@ -184,12 +196,12 @@ if usr_logic_sell == true
         sys_logic_sell := true
 
 
-
 // === CORE POSITION EXECUTION ===
-
 if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeBuy") or sys_input_dire_alternate == false)
     sys_logic_direction := "LastTradeBuy"
     sys_logic_counter_buy += 1
+
+    log.info("pl: {0}, calc: {1}", sys_logic_pl, sys_logic_pl_calc)
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
         //alert('1234567891234,buy,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
@@ -205,6 +217,8 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news an
 if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeSell") or sys_input_dire_alternate == false)
     sys_logic_direction := "LastTradeSell"
     sys_logic_counter_sell += 1
+
+    log.info("pl: {0}, calc: {1}", sys_logic_pl, sys_logic_pl_calc)
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_news, sys_logic_position)
     if sys_input_exit_tpsl
         //alert('1234567891234,sell,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
@@ -217,31 +231,13 @@ if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news a
         strategy.exit("HLRR Sell Exit", from_entry ="HLRR Sell Entry", loss=sys_logic_hlrr_sellEntry, profit=sys_logic_hlrr_sellExit)
 
 
-
-// === CORE STATS TABLE ===
-
-var sys_table_stats = table.new(position.bottom_left, columns = 2, rows = 3)  //bgcolor = color.yellow, border_width = 1
-//table.cell(sys_table_stats, 0, 0, "Title",                              bgcolor = #aaaaaa,     width = 7, height = 4)
-
-table.cell(sys_table_stats, 0, 0, "Trades Buy",                         bgcolor = #aaaaaa,     width = 9, height = 4)
-table.cell(sys_table_stats, 1, 0, str.tostring(sys_logic_counter_sell), bgcolor = color.green, width = 5, height = 4)
-
-table.cell(sys_table_stats, 0, 1, "Trades Sell",                        bgcolor = #aaaaaa,     width = 9, height = 4)
-table.cell(sys_table_stats, 1, 1, str.tostring(sys_logic_counter_buy),  bgcolor = color.red,   width = 5, height = 4)
-
-table.cell(sys_table_stats, 0, 2, "",                                                          width = 9, height = 6)
-table.cell(sys_table_stats, 1, 2, "",                                                          width = 5, height = 6)
-
-
-
 // === CORE RESET VARIABLES ===
-
 sys_logic_position := false
 sys_logic_buy := false
 sys_logic_sell := false
 usr_logic_buy := false
 usr_logic_sell := false
-
+//sys_logic_pl := "Neutral"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
