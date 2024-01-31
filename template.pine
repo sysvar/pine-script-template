@@ -6,10 +6,14 @@ strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=tru
 
 // === CORE VARIABLES ===
 var sys_group_name_gen="General -----------------------------------------------------------------------------------------"
-var sys_logic_buy = false
-var sys_logic_sell = false
-var usr_logic_buy = false
-var usr_logic_sell = false
+var sys_logic_entryBuy = false
+var sys_logic_entrySell = false
+var usr_logic_entryBuy = false
+var usr_logic_entrySell = false
+var sys_logic_exitBuy = false
+var sys_logic_exitSell = false
+var usr_logic_exitBuy = false
+var usr_logic_exitSell = false
 var sys_logic_counter_buy = 0
 var sys_logic_counter_sell = 0
 var string sys_logic_direction = ""
@@ -26,6 +30,7 @@ sys_input_dire_alternate = input.bool(false, title='Alternate Between Buy & Sell
 sys_input_exit_tpsl = input.bool(true, "(A) Take Profit / Stop Loss", group="Trading Exit (Select Only 1)")
 sys_input_exit_tpts = input.bool(false, "(B) Take Profit / Trailing Stop (TODO)", group="Trading Exit (Select Only 1)")
 sys_input_exit_hlrr = input.bool(false, "(C) Recent High/Low and Risk Reward Ratio", group="Trading Exit (Select Only 1)")
+sys_input_exit_cust = input.bool(false, "(D) Custom Exit", group="Trading Exit (Select Only 1)")
 
 sys_input_risk_tpslProfit = input.float(9, step=0.1, title="(A) Take Profit Pips", group="Risk Management (Primary)")
 sys_input_risk_tpslLoss = input.float(4, step=0.1, title="(A) Stop Loss Pips", group="Risk Management (Primary)")
@@ -70,10 +75,10 @@ strategy.risk.allow_entry_in(sys_input_dire == "Only Buy" ? strategy.direction.l
 sys_funct_pip = str.tonumber(sys_input_pip)
 
 if sys_input_dire == "None"
-    log.info("usr_logic_buy: {0}", usr_logic_buy)
-    log.info("usr_logic_sell: {0}", usr_logic_sell)
-    usr_logic_buy := false
-    usr_logic_sell := false
+    log.info("usr_logic_entryBuy: {0}", usr_logic_entryBuy)
+    log.info("usr_logic_entrySell: {0}", usr_logic_entrySell)
+    usr_logic_entryBuy := false
+    usr_logic_entrySell := false
 
 sys_logic_backtest = sys_input_backtest_range == false or (sys_input_backtest_range == true and (time >= sys_input_backtest_start and time <= sys_input_backtest_end))
 
@@ -161,12 +166,26 @@ if close < (usr_funct_ema - (usr_input_ema_diff/usr_logic_pipVlaue))      // 3 P
 // Plot
 plot(usr_funct_ema, color=color.yellow, title="EMA")
 
-// Decision
+
+
+// Decision Entry (Always)
 if usr_logic_ema_buy == true
-    usr_logic_buy := true
+    usr_logic_entryBuy := true
 
 if usr_logic_ema_sell == true
-    usr_logic_sell := true
+    usr_logic_entrySell := true
+
+
+// Decision Exit (Custom Exit Only)
+if (strategy.position_size != 0)                            // Position Open
+    if (strategy.position_size > 0)                         // Position Open Buy
+        if (close < close[5])                               // Position Logic
+            usr_logic_exitBuy := true                       // Position Close
+
+    if (strategy.position_size < 0)                         // Position Open Sell
+        if (close > close[5])                               // Position Logic
+            usr_logic_exitSell := true                      // Position Close
+
 
 // Remember to RESET THESE VARIABLES at the END of the SCRIPT !
 
@@ -180,29 +199,28 @@ if usr_logic_ema_sell == true
 
 
 
-// === FINAL LOGIC ===
-//log.info("usr_logic_buy: {0}", usr_logic_buy)
-if usr_logic_buy == true
+// === FINAL LOGIC - ENTRY ===
+if usr_logic_entryBuy == true
     if sys_input_dire_reverse
-        sys_logic_sell := true
+        sys_logic_entrySell := true
     else
-        sys_logic_buy := true
+        sys_logic_entryBuy := true
 
-//log.info("usr_logic_sell: {0}", usr_logic_sell)
-if usr_logic_sell == true
+if usr_logic_entrySell == true
     if sys_input_dire_reverse
-        sys_logic_buy := true
+        sys_logic_entryBuy := true
     else
-        sys_logic_sell := true
+        sys_logic_entrySell := true
 
 
 // === CORE POSITION EXECUTION ===
-if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeBuy") or sys_input_dire_alternate == false)
+if sys_logic_entryBuy and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeBuy") or sys_input_dire_alternate == false)
     sys_logic_direction := "LastTradeBuy"
     sys_logic_counter_buy += 1
-
     log.info("pl: {0}, calc: {1}", sys_logic_pl, sys_logic_pl_calc)
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_buy: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_buy, sys_logic_news, sys_logic_position)
+    if sys_input_exit_cust
+        strategy.entry("CUST Buy Entry", strategy.long, sys_input_general_positionSize)
     if sys_input_exit_tpsl
         //alert('1234567891234,buy,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
         strategy.entry("TPSL Buy Entry", strategy.long, sys_input_general_positionSize)
@@ -214,12 +232,14 @@ if sys_logic_buy and sys_logic_time and sys_logic_backtest and sys_logic_news an
         strategy.exit("HLRR Buy Exit", from_entry ="HLRR Buy Entry", loss=sys_logic_hlrr_buyEntry, profit=sys_logic_hlrr_buyExit)
 
 
-if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeSell") or sys_input_dire_alternate == false)
+if sys_logic_entrySell and sys_logic_time and sys_logic_backtest and sys_logic_news and sys_logic_waitLoss and sys_logic_position and ((sys_input_dire_alternate and sys_logic_direction != "LastTradeSell") or sys_input_dire_alternate == false)
     sys_logic_direction := "LastTradeSell"
     sys_logic_counter_sell += 1
 
     log.info("pl: {0}, calc: {1}", sys_logic_pl, sys_logic_pl_calc)
     //log.info("sys_logic_backtest: {0}\n sys_input_dire_sell: {1}\n sys_logic_news: {2}\n sys_logic_position: {3}", sys_logic_backtest, sys_input_dire_sell, sys_logic_news, sys_logic_position)
+    if sys_input_exit_cust
+        strategy.entry("CUST Sell Entry", strategy.short, sys_input_general_positionSize)
     if sys_input_exit_tpsl
         //alert('1234567891234,sell,' +syminfo.ticker+ ',sl=' +str.tostring(sys_logic_tpsl_loss)+ ',tp=' +str.tostring(sys_logic_tpsl_profit)+ ',risk=5', alert.freq_once_per_bar_close)    // PineConnector Automation
         strategy.entry("TPSL Sell Entry", strategy.short, sys_input_general_positionSize)
@@ -231,12 +251,32 @@ if sys_logic_sell and sys_logic_time and sys_logic_backtest and sys_logic_news a
         strategy.exit("HLRR Sell Exit", from_entry ="HLRR Sell Entry", loss=sys_logic_hlrr_sellEntry, profit=sys_logic_hlrr_sellExit)
 
 
+// === FINAL LOGIC - EXIT (CUSTOM EXIT ONLY) ===
+if usr_logic_exitBuy == true 
+    sys_logic_exitBuy := true
+
+if usr_logic_exitSell == true 
+    sys_logic_exitSell := true
+
+
+// === CORE POSITION EXECUTION - EXIT (CUSTOM EXIT ONLY) ===
+if (sys_logic_exitBuy)
+    strategy.close("CUST Buy Entry")
+
+if (sys_logic_exitSell)
+    strategy.close("CUST Sell Entry")
+
+
 // === CORE RESET VARIABLES ===
 sys_logic_position := false
-sys_logic_buy := false
-sys_logic_sell := false
-usr_logic_buy := false
-usr_logic_sell := false
+sys_logic_entryBuy := false
+sys_logic_entrySell := false
+usr_logic_entryBuy := false
+usr_logic_entrySell := false
+sys_logic_exitBuy := false
+sys_logic_exitSell := false
+usr_logic_exitBuy := false
+usr_logic_exitSell := false
 //sys_logic_pl := "Neutral"
 
 
