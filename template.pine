@@ -6,6 +6,8 @@ strategy(title='Git Pine Script v5 Template', shorttitle='TEMPLATE', overlay=tru
 
 // === CORE VARIABLES ===
 var sys_group_name_gen="General -----------------------------------------------------------------------------------------"
+var sys_logic_position_openBuy = false
+var sys_logic_position_openSell = false
 var sys_logic_entryBuy = false
 var sys_logic_entrySell = false
 var usr_logic_entryBuy = false
@@ -95,6 +97,8 @@ for i = 0 to sys_input_risk_newsCandles - 1
 sys_logic_news = not (array.max(sys_funct_news) > sys_logic_risk_newsdecimal)
 
 sys_logic_position = not (strategy.position_size < 0 or strategy.position_size > 0)
+sys_logic_position_openBuy := strategy.position_size > 0 ? true : na
+sys_logic_position_openSell := strategy.position_size < 0 ? true : na
 
 sys_logic_backtest_outRange = sys_input_backtest_range and (time < sys_input_backtest_start or time > sys_input_backtest_end)
 sys_logic_trading_outRange  = not sys_logic_time
@@ -177,14 +181,13 @@ if usr_logic_ema_sell == true
 
 
 // Decision Exit (Custom Exit Only)
-if (strategy.position_size != 0)                            // Position Open
-    if (strategy.position_size > 0)                         // Position Open Buy
-        if (close < close[5])                               // Position Logic
-            usr_logic_exitBuy := true                       // Position Close
+if sys_logic_position_openBuy == true                   // Position Open Buy
+    if (close < close[5])                               // Position Logic
+        usr_logic_exitBuy := true                       // Position Close
 
-    if (strategy.position_size < 0)                         // Position Open Sell
-        if (close > close[5])                               // Position Logic
-            usr_logic_exitSell := true                      // Position Close
+if sys_logic_position_openSell == true                  // Position Open Sell
+    if (close > close[5])                               // Position Logic
+        usr_logic_exitSell := true                      // Position Close
 
 
 // Remember to RESET THESE VARIABLES at the END of the SCRIPT !
@@ -269,6 +272,8 @@ if (sys_logic_exitSell)
 
 // === CORE RESET VARIABLES ===
 sys_logic_position := false
+sys_logic_position_openBuy := false
+sys_logic_position_openSell := false
 sys_logic_entryBuy := false
 sys_logic_entrySell := false
 usr_logic_entryBuy := false
