@@ -99,6 +99,7 @@ sys_logic_news = not (array.max(sys_funct_news) > sys_logic_risk_newsdecimal)
 sys_logic_position = not (strategy.position_size < 0 or strategy.position_size > 0)
 sys_logic_position_openBuy := strategy.position_size > 0 ? true : na
 sys_logic_position_openSell := strategy.position_size < 0 ? true : na
+sys_logic_position_entryPrice = strategy.opentrades.entry_price(strategy.opentrades - 1)
 
 sys_logic_backtest_outRange = sys_input_backtest_range and (time < sys_input_backtest_start or time > sys_input_backtest_end)
 sys_logic_trading_outRange  = not sys_logic_time
